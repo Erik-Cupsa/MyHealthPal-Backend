@@ -72,6 +72,21 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
+    public Session createTherapySession(Session session) {
+        Session sessionReturned = sessionRepository.save(session);
+
+        String content = "You are a simulated therapist.";
+
+
+        Message message = new Message();
+        message.setContent(content);
+        message.setSender("user");
+
+        messageService.createMessage(message, sessionReturned.getId());
+
+        return sessionRepository.save(session);
+    }
+
     public Session updateSession(Long id, Session updatedSession) {
         Session session = getSessionById(id);
         session.setEndTime(updatedSession.getEndTime());
