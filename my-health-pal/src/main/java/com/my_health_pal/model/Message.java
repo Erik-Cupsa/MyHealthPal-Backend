@@ -20,7 +20,7 @@ public class Message {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "session_id", nullable = false)
+    @JoinColumn(name = "session_id", referencedColumnName = "id", nullable = false)
     private Session session;
 
     @Column(nullable = false)

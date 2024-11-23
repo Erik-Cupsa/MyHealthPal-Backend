@@ -27,7 +27,7 @@ public class Session {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDateTime startTime;
 
     @Column
@@ -36,11 +36,9 @@ public class Session {
     @Column(nullable = false)
     private Boolean completed = false;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private SessionType sessionType;
-
-    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> messages = new ArrayList<>();
 
     @PrePersist
     private void setTime() {
