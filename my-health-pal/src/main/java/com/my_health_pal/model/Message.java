@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sessions")
+@Table(name = "messages")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,4 +31,9 @@ public class Message {
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    @PrePersist
+    private void setTimestamp() {
+        this.timestamp = LocalDateTime.now();
+    }
 }

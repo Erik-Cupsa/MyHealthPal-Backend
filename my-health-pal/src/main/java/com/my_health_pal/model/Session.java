@@ -40,12 +40,8 @@ public class Session {
     @Column(nullable = false)
     private SessionType sessionType;
 
-//    @OneToMany(mappedBy = "session", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Message> messages = new ArrayList<>();
-
-    // Automatically set the startTime to the creation date
     @PrePersist
-    public void prePersist() {
+    private void setTime() {
         this.startTime = LocalDateTime.now();
     }
 }

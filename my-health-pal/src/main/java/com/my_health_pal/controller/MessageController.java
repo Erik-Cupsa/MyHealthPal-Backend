@@ -25,8 +25,13 @@ public class MessageController {
         return ResponseEntity.ok(messageService.getMessageById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<Message> createMessage(@RequestBody Message message) {
-        return ResponseEntity.ok(messageService.createMessage(message));
+    @GetMapping("/session/{id}")
+    public ResponseEntity<List<Message>> getMessagesBySession(@PathVariable Long id){
+        return ResponseEntity.ok(messageService.getMessagesBySessionId(id));
+    }
+
+    @PostMapping("/{sessionId}")
+    public ResponseEntity<Message> createMessage(@RequestBody Message message, @PathVariable Long sessionId) {
+        return ResponseEntity.ok(messageService.createMessage(message, sessionId));
     }
 }
