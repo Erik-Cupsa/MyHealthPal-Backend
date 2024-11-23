@@ -57,7 +57,7 @@ public class GPTService {
         }
     }
 
-    public String getIterativeChatResponse(Long sessionId) {
+    public Message getIterativeChatResponse(Long sessionId) {
         List<Message> messages = messageService.getMessagesBySessionId(sessionId);
         List<MessageHistoryDto> messageHistoryDtos = new ArrayList<>();
 
@@ -76,8 +76,12 @@ public class GPTService {
             promptBuilder.append("\nFocus on responding to the latest message:\n");
             promptBuilder.append(lastMessage.getContent());
         }
+        String response = getChatResponse(promptBuilder.toString());
+        Message message = new Message();
+        message.setContent(response);
+        message.setSender("ChatGPT");
 
-        return getChatResponse(promptBuilder.toString());
+        return messageService.createMessage(message, sessionId);
     }
 
 }

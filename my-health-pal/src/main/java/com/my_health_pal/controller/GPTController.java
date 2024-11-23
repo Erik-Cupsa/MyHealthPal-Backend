@@ -29,18 +29,16 @@ public class GPTController {
     }
 
     @PostMapping("/chat/{sessionId}")
-    public ResponseEntity<String> getIterativeChatResponse(@PathVariable Long sessionId) {
+    public ResponseEntity<Message> getIterativeChatResponse(@PathVariable Long sessionId) {
         try {
-            String response = gptService.getIterativeChatResponse(sessionId);
-            Message message = new Message();
-            message.setContent(response);
-            message.setSender("ChatGPT");
-
-            messageService.createMessage(message, sessionId);
+            Message response = gptService.getIterativeChatResponse(sessionId);
 
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error: " + e.getMessage());
+            Message errorMessage = new Message();
+            errorMessage.setSender("system");
+            errorMessage.setContent("An error occurred while processing the response: " + e.getMessage());
+            return ResponseEntity.status(500).body(errorMessage);
         }
     }
 }
