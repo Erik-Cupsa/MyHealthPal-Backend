@@ -1,6 +1,8 @@
 package com.my_health_pal.controller;
 
+import com.my_health_pal.dto.MessageResponseDto;
 import com.my_health_pal.model.Message;
+import com.my_health_pal.service.GPTService;
 import com.my_health_pal.service.MessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,9 @@ public class MessageController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired
+    private GPTService gptService;
 
     @GetMapping
     public ResponseEntity<List<Message>> getAllMessages() {
@@ -31,7 +36,14 @@ public class MessageController {
     }
 
     @PostMapping("/{sessionId}")
-    public ResponseEntity<Message> createMessage(@RequestBody Message message, @PathVariable Long sessionId) {
-        return ResponseEntity.ok(messageService.createMessage(message, sessionId));
+    public ResponseEntity<MessageResponseDto> createMessage(@RequestBody Message message, @PathVariable Long sessionId) {
+        Message userMessage = messageService.createMessage(message, sessionId);
+
+        Message gptResponse = gptService.getIterativeChatResponse(sessionId);
+
+        MessageResponseDto responseDto = new MessageResponseDto(userMessage, gptResponse);
+
+        return ResponseEntity.ok(responseDto);
     }
+
 }
