@@ -27,7 +27,10 @@ public class SessionService {
                 .orElseThrow(() -> new RuntimeException("Session not found with ID: " + id));
     }
 
-    public Session createSession(Session session) {
+    public Session createSession(Session session, Long userId) {
+        User user = getUserById(userId);
+        session.setUser(user);
+
         return sessionRepository.save(session);
     }
 

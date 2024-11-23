@@ -29,8 +29,7 @@ public class SessionController {
     public ResponseEntity<Session> createSession(
             @RequestBody Session session,
             @RequestParam Long userId) {
-        session.setUser(sessionService.getUserById(userId));
-        return ResponseEntity.ok(sessionService.createSession(session));
+        return ResponseEntity.ok(sessionService.createSession(session, userId));
     }
 
     @PutMapping("/{id}")
