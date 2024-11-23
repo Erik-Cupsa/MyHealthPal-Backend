@@ -26,13 +26,22 @@ public class SessionController {
     }
 
     @PostMapping
-    public ResponseEntity<Session> createSession(@RequestBody Session session) {
+    public ResponseEntity<Session> createSession(
+            @RequestBody Session session,
+            @RequestParam Long userId) {
+        session.setUser(sessionService.getUserById(userId));
         return ResponseEntity.ok(sessionService.createSession(session));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Session> updateSession(@PathVariable Long id, @RequestBody Session session) {
         return ResponseEntity.ok(sessionService.updateSession(id, session));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Session>> getSessionsByUserId(@PathVariable Long userId) {
+        List<Session> sessions = sessionService.getSessionsByUserId(userId);
+        return ResponseEntity.ok(sessions);
     }
 
     @DeleteMapping("/{id}")

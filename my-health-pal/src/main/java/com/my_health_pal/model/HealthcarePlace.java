@@ -29,4 +29,7 @@ public class HealthcarePlace {
 
       @Column(nullable = false)
       private double longitude;
+
+      @Column(nullable = false)
+      private String imageUrl;
 }

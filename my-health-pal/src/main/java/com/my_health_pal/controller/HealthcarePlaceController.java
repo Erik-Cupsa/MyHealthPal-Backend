@@ -16,8 +16,17 @@ public class HealthcarePlaceController {
     private HealthcarePlaceService healthcarePlaceService;
 
     @GetMapping
-    public ResponseEntity<List<HealthcarePlace>> getAllHealthcarePlaces() {
+    public ResponseEntity<List<HealthcarePlace>> getAllValidHealthcarePlaces() {
         return ResponseEntity.ok(healthcarePlaceService.getAllHealthcarePlaces());
+    }
+
+    @GetMapping("/nearby")
+    public ResponseEntity<List<HealthcarePlace>> getNearbyHealthcarePlaces(
+            @RequestParam double latitude,
+            @RequestParam double longitude,
+            @RequestParam double maxDistance) {
+        List<HealthcarePlace> nearbyPlaces = healthcarePlaceService.getNearbyHealthcarePlaces(latitude, longitude, maxDistance);
+        return ResponseEntity.ok(nearbyPlaces);
     }
 
     @GetMapping("/{id}")
