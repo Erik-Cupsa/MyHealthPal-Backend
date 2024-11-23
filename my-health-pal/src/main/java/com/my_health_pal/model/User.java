@@ -31,10 +31,10 @@ public class User {
     @Column(nullable = false)
     private String gender;
 
-    @Column(nullable = false)
+    @Column
     private Double latitude;
 
-    @Column(nullable = false)
+    @Column
     private Double longitude;
 
     @Column(nullable = false, length = 1000)
