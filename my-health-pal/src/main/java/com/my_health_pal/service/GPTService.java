@@ -35,7 +35,7 @@ public class GPTService {
         request.put("messages", List.of(
                 Map.of("role", "user", "content", prompt)
         ));
-        request.put("max_tokens", 150);
+        request.put("max_tokens", 500);
         request.put("temperature", 0.7);
 
         HttpHeaders headers = new HttpHeaders();

@@ -1,5 +1,6 @@
 package com.my_health_pal.service;
 
+import com.my_health_pal.model.Message;
 import com.my_health_pal.model.Session;
 import com.my_health_pal.model.User;
 import com.my_health_pal.repository.SessionRepository;
@@ -18,6 +19,9 @@ public class SessionService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private MessageService messageService;
+
     public List<Session> getAllSessions() {
         return sessionRepository.findAll();
     }
@@ -30,6 +34,40 @@ public class SessionService {
     public Session createSession(Session session, Long userId) {
         User user = getUserById(userId);
         session.setUser(user);
+
+        Session sessionReturned = sessionRepository.save(session);
+
+        String preContent = "You are a virtual medical assistant. Your primary goal is to gather as much relevant information as possible to understand the user's symptoms, concerns, and health history before recommending next steps.\n" +
+                "\n" +
+                "1. Always start by asking clarifying questions about their symptoms, such as duration, severity, and any triggers or related factors. \n" +
+                "2. Do not provide any explanations or recommendations until you have gathered sufficient information through detailed questioning.\n" +
+                "3. Once you have enough information, provide a clear explanation of possible causes or conditions in simple, non-technical language.\n" +
+                "4. Only suggest seeing a doctor or visiting a medical clinic if you believe the issue might require professional medical attention. In such cases, include this exact phrase in your response: \"This issue requires medical attention.\"\n" +
+                "5. Be empathetic, assertive, and professional throughout the conversation. Encourage the user to provide as much detail as they can.\n" +
+                "\n" +
+                "Always ensure the user feels heard and understood. Begin every response with questions to gather more information before proceeding with advice or suggestions.\n";
+
+
+        Message preMessage = new Message();
+        preMessage.setContent(preContent);
+        preMessage.setSender("user");
+
+        messageService.createMessage(preMessage, sessionReturned.getId());
+
+        String gender = user.getGender();
+        Integer age = user.getAge();
+        String medicalHistory = user.getMedicalHistory();
+
+        String content = "The user being diagnosed has the following details: " +
+                "Gender: " + gender + ", " +
+                "Age: " + age + ", " +
+                "Medical History: " + medicalHistory + ".";
+
+        Message message = new Message();
+        message.setContent(content);
+        message.setSender("user");
+
+        messageService.createMessage(message, sessionReturned.getId());
 
         return sessionRepository.save(session);
     }
