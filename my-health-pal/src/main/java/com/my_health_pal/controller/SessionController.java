@@ -2,6 +2,7 @@ package com.my_health_pal.controller;
 
 import com.my_health_pal.model.Session;
 import com.my_health_pal.service.SessionService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +31,11 @@ public class SessionController {
             @RequestBody Session session,
             @RequestParam Long userId) {
         return ResponseEntity.ok(sessionService.createSession(session, userId));
+    }
+
+    @PostMapping("/therapy")
+    public ResponseEntity<Session> createTherapySession(@RequestBody Session session) {
+        return ResponseEntity.ok(sessionService.createTherapySession(session));
     }
 
     @PutMapping("/{id}")

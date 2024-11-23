@@ -25,6 +25,13 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(user));
     }
 
+    @PatchMapping("/{id}/medical-history")
+    public ResponseEntity<User> updateMedicalHistory(@PathVariable Long id, @RequestBody String medicalHistory) {
+        User updatedUser = userService.updateMedicalHistory(id, medicalHistory);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+
 
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity<String> deleteUser(@PathVariable Long id) {

@@ -37,7 +37,7 @@ public class User {
     @Column
     private Double longitude;
 
-    @Column(nullable = false, length = 1000)
+    @Column(length = 1000)
     private String medicalHistory;
 
     @Column(nullable = false)
