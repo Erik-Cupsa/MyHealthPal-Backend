@@ -45,7 +45,7 @@ public class MessageService {
     public Message createTherapyMessage(Message message, Long sessionId) {
         Session session = getSessionById(sessionId);
         String content = message.getContent();
-        String pastMessages = findMessagedBySender("User");
+        String pastMessages = findMessagesBySender("User", sessionId);
         if (pastMessages == null) {
             pastMessages = "";
         }
@@ -63,15 +63,17 @@ public class MessageService {
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + sessionId));
     }
 
-    public String findMessagedBySender(String sender) {
-        List<Message> messages = messageRepository.findMessagesBySender(sender);
+    public String findMessagesBySender(String sender, Long sessionId) {
+        List<Message> messages = messageRepository.findMessagesBySession_Id(sessionId);
         StringBuilder allMessages = new StringBuilder();
     
         for (Message message : messages) {
-            if (allMessages.length() > 0) {
-                allMessages.append("\n");
+            if (message.getSender().equals(sender)){
+                if (allMessages.length() > 0) {
+                    allMessages.append("\n");
+                }
+                allMessages.append(message.getContent());
             }
-            allMessages.append(message.getContent());
         }
     
         return allMessages.toString();
