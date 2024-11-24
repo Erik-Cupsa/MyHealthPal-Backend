@@ -54,7 +54,10 @@ public class MessageController {
     }
 
     @PostMapping("/therapy/{sessionId}")
-    public ResponseEntity<MessageResponseDto> createTherapyMessage(@RequestBody Message message, @PathVariable Long sessionId) {
+    public ResponseEntity<MessageResponseDto> createTherapyMessage(@RequestBody String content, @PathVariable Long sessionId) {
+        Message message = new Message();
+        message.setContent(content);
+        message.setSender("user");
         Message userMessage = messageService.createTherapyMessage(message, sessionId);
 
         Message gptResponse = gptService.getIterativeChatResponse(sessionId);
