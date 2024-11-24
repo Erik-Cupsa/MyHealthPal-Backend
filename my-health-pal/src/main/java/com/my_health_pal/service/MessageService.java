@@ -45,7 +45,12 @@ public class MessageService {
     public Message createTherapyMessage(Message message, Long sessionId) {
         Session session = getSessionById(sessionId);
         String content = message.getContent();
-        String sentiment = sentimentService.analyzeSentiment(content).block();
+        String pastMessages = findMessagedBySender("User");
+        if (pastMessages == null) {
+            pastMessages = "";
+        }
+        String updatedMessages = pastMessages + "\n" + content;
+        String sentiment = sentimentService.analyzeSentiment(updatedMessages).block();
         String newContent = content + ", The detected sentiment of the user is: " + sentiment;
         message.setContent(newContent);
         message.setSession(session);
@@ -57,4 +62,18 @@ public class MessageService {
         return sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + sessionId));
     }
+
+    public String findMessagedBySender(String sender) {
+        List<Message> messages = messageRepository.findMessagesBySender(sender);
+        StringBuilder allMessages = new StringBuilder();
+    
+        for (Message message : messages) {
+            if (allMessages.length() > 0) {
+                allMessages.append("\n");
+            }
+            allMessages.append(message.getContent());
+        }
+    
+        return allMessages.toString();
+    }    
 }

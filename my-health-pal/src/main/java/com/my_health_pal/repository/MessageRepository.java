@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface MessageRepository extends JpaRepository<Message, Long> {
       List<Message> findMessagesBySession_Id(Long id);
+      List<Message> findMessagesBySender(String sender);
 }
