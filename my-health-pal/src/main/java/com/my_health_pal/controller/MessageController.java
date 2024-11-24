@@ -54,10 +54,8 @@ public class MessageController {
         MessageResponseDto responseDto = new MessageResponseDto(userMessage, gptResponse);
 
         if(userMessage.getContent().contains("The medicine I want help understanding is:")){
-            userMessage.setContent("Image was sent.");
+            messageRepository.delete(userMessage);
         }
-
-        messageRepository.save(userMessage);
 
         return ResponseEntity.ok(responseDto);
     }
