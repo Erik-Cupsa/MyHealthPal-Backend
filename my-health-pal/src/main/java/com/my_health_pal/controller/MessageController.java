@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.my_health_pal.dto.MessageResponseDto;
 import com.my_health_pal.model.Message;
+import com.my_health_pal.repository.MessageRepository;
 import com.my_health_pal.service.GPTService;
 import com.my_health_pal.service.MessageService;
 
@@ -22,6 +23,8 @@ public class MessageController {
 
     @Autowired
     private MessageService messageService;
+
+    @Autowired MessageRepository messageRepository;
 
     @Autowired
     private GPTService gptService;
@@ -49,6 +52,12 @@ public class MessageController {
         Message gptResponse = gptService.getIterativeChatResponse(sessionId);
 
         MessageResponseDto responseDto = new MessageResponseDto(userMessage, gptResponse);
+
+        if(userMessage.getContent().contains("The medicine I want help understanding is:")){
+            userMessage.setContent("Image was sent.");
+        }
+
+        messageRepository.save(userMessage);
 
         return ResponseEntity.ok(responseDto);
     }
