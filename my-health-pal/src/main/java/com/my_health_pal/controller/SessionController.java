@@ -2,6 +2,7 @@ package com.my_health_pal.controller;
 
 import java.util.List;
 
+import com.my_health_pal.enums.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,7 +43,10 @@ public class SessionController {
     }
 
     @PostMapping("/therapy")
-    public ResponseEntity<Session> createTherapySession(@RequestBody Session session) {
+    public ResponseEntity<Session> createTherapySession() {
+        Session session = new Session();
+        session.setCompleted(false);
+        session.setSessionType(SessionType.MENTAL_HEALTH_THERAPIST);
         return ResponseEntity.ok(sessionService.createTherapySession(session));
     }
 
