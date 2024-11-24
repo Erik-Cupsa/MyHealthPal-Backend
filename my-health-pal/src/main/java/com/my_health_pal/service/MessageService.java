@@ -1,15 +1,14 @@
 package com.my_health_pal.service;
 
-import com.my_health_pal.model.Message;
-import com.my_health_pal.model.Session;
-import com.my_health_pal.model.User;
-import com.my_health_pal.repository.MessageRepository;
-import com.my_health_pal.repository.SessionRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.List;
+import com.my_health_pal.model.Message;
+import com.my_health_pal.model.Session;
+import com.my_health_pal.repository.MessageRepository;
+import com.my_health_pal.repository.SessionRepository;
 
 @Service
 public class MessageService {
@@ -19,6 +18,9 @@ public class MessageService {
 
     @Autowired
     private SessionRepository sessionRepository;
+
+    @Autowired
+    private SentimentService sentimentService;
 
     public List<Message> getAllMessages() {
         return messageRepository.findAll();
@@ -35,6 +37,17 @@ public class MessageService {
 
     public Message createMessage(Message message, Long sessionId) {
         Session session = getSessionById(sessionId);
+        message.setSession(session);
+
+        return messageRepository.save(message);
+    }
+
+    public Message createTherapyMessage(Message message, Long sessionId) {
+        Session session = getSessionById(sessionId);
+        String content = message.getContent();
+        String sentiment = sentimentService.analyzeSentiment(content).block();
+        String newContent = content + ", The detected sentiment of the user is: " + sentiment;
+        message.setContent(newContent);
         message.setSession(session);
 
         return messageRepository.save(message);
